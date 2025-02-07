@@ -39,6 +39,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -64,18 +65,18 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:1.5.0")
 
     // ✅ Networking Dependencies (Retrofit & Gson)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // Retrofit library
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Gson converter for Retrofit
 
     // ✅ Coroutines for Asynchronous Networking
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4") // Coroutine support for Android
 
     // ✅ Ktor Networking Dependencies (Added)
-    implementation("io.ktor:ktor-client-core:2.0.0")
-    implementation("io.ktor:ktor-client-cio:2.0.0")
-    implementation("io.ktor:ktor-client-json:2.0.0")
-    implementation("io.ktor:ktor-client-content-negotiation:2.0.0")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
+    implementation("io.ktor:ktor-client-core:2.0.0") // Core Ktor client
+    implementation("io.ktor:ktor-client-cio:2.0.0") // CIO engine for Ktor
+    implementation("io.ktor:ktor-client-json:2.0.0") // JSON converter for Ktor
+    implementation("io.ktor:ktor-client-content-negotiation:2.0.0") // Content negotiation for Ktor
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0") // Serialization with kotlinx
 
     // ✅ Testing Dependencies
     testImplementation(libs.junit)
