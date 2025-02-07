@@ -1,5 +1,6 @@
 package com.example.lab_reservation_system.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.compose.ui.platform.LocalContext
 import com.example.lab_reservation_system.ui.viewmodel.AuthViewModel
 
 @Composable
@@ -21,6 +23,12 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showMessage by remember { mutableStateOf(false) }
+
+    // Define the showToast function that will show the toast
+    val context = LocalContext.current
+    val showToast: (String) -> Unit = { message ->
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 
     Column(
         modifier = Modifier
@@ -62,9 +70,8 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
 
                 Button(
                     onClick = {
-                        authViewModel.signUp(userId, email, password) { success ->
-                            showMessage = true
-                        }
+                        // Call signUp and pass showToast to display success or failure message
+                        authViewModel.signUp(userId, email, password, showToast)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF41B6A6))

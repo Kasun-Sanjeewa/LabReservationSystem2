@@ -10,15 +10,15 @@ class AuthViewModel : ViewModel() {
 
     var signUpMessage = ""
 
-    fun signUp(username: String, email: String, password: String, onComplete: (Boolean) -> Unit) {
+    // Updated signUp function with showToast callback
+    fun signUp(username: String, email: String, password: String, showToast: (String) -> Unit) {
         viewModelScope.launch {
             repository.signUp(username, email, password) { response ->
                 if (response != null) {
-                    signUpMessage = response.message
-                    onComplete(true)
+                    showToast("Registration Successful") // Show success message
                 } else {
                     signUpMessage = "Signup failed!"
-                    onComplete(false)
+                    showToast("Signup failed!") // Show failure message
                 }
             }
         }
