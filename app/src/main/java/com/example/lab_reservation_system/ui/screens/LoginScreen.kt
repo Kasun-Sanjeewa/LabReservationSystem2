@@ -1,5 +1,7 @@
 package com.example.lab_reservation_system.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -7,17 +9,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.lab_reservation_system.data.LoginRequest
+import com.example.lab_reservation_system.data.RetrofitClient
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun LoginScreen(navController: NavController) {
     var userId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -47,7 +58,7 @@ fun LoginScreen(navController: NavController) {
                     .padding(24.dp)
                     .fillMaxWidth()
             ) {
-                // User ID field
+                // Email field
                 Text(
                     text = "Email",
                     fontSize = 16.sp,
@@ -94,7 +105,9 @@ fun LoginScreen(navController: NavController) {
 
                 // Sign In Button
                 Button(
-                    onClick = { /* Handle login */ },
+                    onClick = {
+                        loginUser(userId, password, navController, context)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -112,41 +125,34 @@ fun LoginScreen(navController: NavController) {
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Forgot password & Remember Me Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(
-                        onClick = { /* Handle forgot password */ }
-                    ) {
-                        Text(
-                            text = "Forgot password ?",
-                            color = Color.Black,
-                            fontSize = 14.sp
-                        )
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Checkbox(
-                            checked = rememberMe,
-                            onCheckedChange = { rememberMe = it },
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = Color(0xFF41B6A6)
-                            )
-                        )
-                        Text(
-                            text = "Remember Me",
-                            fontSize = 14.sp,
-                            color = Color.Black
-                        )
-                    }
-                }
             }
         }
     }
+}
+
+// Function to handle login
+fun loginUser(email: String, password: String, navController: NavController, context: android.content.Context) {
+    val call = RetrofitClient.apiService.login(LoginRequest(email, password))
+
+    call.enqueue(object : Callback<com.example.lab_reservation_system.data.LoginResponse> {
+        override fun onResponse(
+            call: Call<com.example.lab_reservation_system.data.LoginResponse>,
+            response: Response<com.example.lab_reservation_system.data.LoginResponse>
+        ) {
+            if (response.isSuccessful) {
+                val token = response.body()?.token
+                Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+
+                // Store the token (e.g., in SharedPreferences)
+                // Navigate to the Dashboard (assuming you create a dashboard screen)
+                navController.navigate("dashboard")
+            } else {
+                Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<com.example.lab_reservation_system.data.LoginResponse>, t: Throwable) {
+            Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+        }
+    })
 }
