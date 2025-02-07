@@ -63,6 +63,14 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.5.0")
     implementation("androidx.compose.ui:ui-tooling:1.5.0")
 
+    // ✅ Networking Dependencies (Retrofit & Gson)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // ✅ Coroutines for Asynchronous Networking
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+
     // Testing Dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
